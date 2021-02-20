@@ -1,0 +1,267 @@
+<CallsGuide@CallsGuide>:
+    BoxLayout:
+        orientation: "vertical"
+        size_hint_y: None
+        padding: 0, 20
+        height: self.minimum_height
+
+<ConversationsGuide@ConversationsGuide>:
+    BoxLayout:
+        orientation: "vertical"
+        size_hint_y: None
+        padding: 0, 20
+        height: self.minimum_height
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+        ContactWidget:
+
+<GuideMenu@GuideMenu>:
+    size_hint_y: .18
+    GuideButton:
+        id: conv_button
+        text: "CONVERSAS"
+        font_size: "13sp"
+        font_name: FREE_SANS_BOLD
+        color: GRAY_CHATEAU
+        group: "guides"
+        state: "down"
+        on_release: root.on_guide(self)
+    GuideButton:
+        id: status_button
+        text: "STATUS"
+        font_size: "13sp"
+        font_name: FREE_SANS_BOLD
+        color: GRAY_CHATEAU
+        group: "guides"
+        on_release: root.on_guide(self)
+    GuideButton:
+        id: calls_button
+        text: "CHAMADAS"
+        font_size: "13sp"
+        font_name: FREE_SANS_BOLD
+        color: GRAY_CHATEAU
+        group: "guides"
+        on_release: root.on_guide(self)
+
+<ContactWidget@ContactWidget>:
+    size_hint_y: None
+    height: 161
+    canvas.before:
+        Color:
+            rgb: EBONY_CLAY
+        Rectangle:
+            size: 525, 2
+            pos: self.pos[0] + 172, self.pos[1]
+    CircularButton:
+        source: "images/user.png"
+        pos_hint: {"center_x": .12, "center_y": .5}
+        on_release: root.on_button()
+    Label:
+        text: "Nome do contato"
+        size_hint_x: None
+        pos_hint: {"center_x": .485, "center_y": .66}
+        width: 350
+        text_size: self.size
+        font_size: "16sp"
+        font_name: FREE_SANS_BOLD
+        color: WHITE_CHOCOLATE
+        bold: True
+        halign: "left"
+        valign: "middle"
+    Label:
+        text: "08/02/2020"
+        font_size: "12sp"
+        font_name: FREE_SANS
+        text_size: self.size
+        halign: "right"
+        valign: "middle"
+        color: GRAY_CHATEAU
+        pos_hint: {"center_x": .46, "center_y": .66}
+    BoxLayout:
+        size_hint: .6, .2
+        pos_hint: {"center_x": .54, "center_y": .34}
+        spacing: 10
+        BoxLayout:
+            size_hint: None, None
+            size: 36, 36
+            Image:
+                source: "images/received.png"
+                color: PICTON_BLUE
+                allow_stretch: True
+                pos_hint: {"center_x": .5, "center_y": .5}
+        Label:
+            text: "Isto é um teste..."
+            text_size: self.size
+            font_size: "16sp"
+            font_name: FREE_SANS
+            halign: "left"
+            valign: "middle"
+            color: GRAY_CHATEAU
+
+#<Notify@FloatLayout>:
+#    size_hint_x: .15
+#    BoxLayout:
+#        size_hint: None, None
+#        size: 14, 14
+#        pos_hint: {"center_x": .5, "center_y": .5}
+#        canvas.before:
+#            Color:
+#                rgba: GRAY_CHATEAU
+#            RoundedRectangle:
+#                size: self.size
+#                pos: self.pos
+#                radius: [400, ]
+#
+#<MessagesNotify@FloatLayout>:
+#    BoxLayout:
+#        size_hint: None, None
+#        size: 38, 38
+#        pos_hint: {"center_x": .25, "center_y": .5}
+#        canvas.before:
+#            Color:
+#                rgba: TEAL_GREEN
+#            RoundedRectangle:
+#                size: self.size
+#                pos: self.pos
+#                radius: [400, ]
+#        Label:
+#            id: test
+#            text: "13"
+#            font_size: "11sp"
+#            pos: self.pos
+#            bold: True
+#            color: 0, 0, 0, 1
+
+<Conversations@Label+ButtonBehavior>:
+    canvas.before:
+        Color:
+            rgb: TEAL_GREEN
+        Rectangle:
+            size: self.width - 2, 7
+            pos: (self.center_x / 2) - 13, self.center_y - 39
+    text: "CONVERSAS"
+    text_size: self.size
+    halign: "center"
+    valign: "top"
+    bold: True
+    color: TEAL_GREEN
+    font_size: "14sp"
+    font_name: FREE_SANS_BOLD
+
+<Status@Label+ButtonBehavior>:
+    text: "STATUS"
+    text_size: self.size
+    halign: "center"
+    valign: "top"
+    bold: True
+    color: ROLLING_STONE
+    font_size: "14sp"
+    font_name: FREE_SANS_BOLD
+
+<Calls@Label+ButtonBehavior>:
+    text: "CHAMADAS"
+    text_size: self.size
+    halign: "center"
+    valign: "top"
+    bold: True
+    color: ROLLING_STONE
+    font_size: "14sp"
+    font_name: FREE_SANS_BOLD
+
+# =============================  STATUS GUIDE =================================;
+
+<StatusGuide@StatusGuide>:
+    BoxLayout:
+        orientation: "vertical"
+        size_hint_y: None
+        padding: 0, 20
+        height: self.minimum_height
+        StatusWidget:
+            mode: "user"
+        BoxLayout:
+            size_hint_y: None
+            height: 60
+            Label:
+                text: "Atualizações recentes"
+                text_size: self.size
+                font_size: "14sp"
+                bold: True
+                font_name: FREE_SANS_BOLD
+                halign: "left"
+                valign: "middle"
+                padding: 20, 0
+                color: GRAY_CHATEAU
+
+<StatusWidget@StatusWidget>:
+    size_hint_y: None
+    height: 161
+    CircularButton:
+        source: "images/user.png"
+        pos_hint: {"center_x": .12, "center_y": .5}
+        on_release: root.on_button()
+    Image:
+        source: "images/add.png"
+        size_hint: None, None
+        size: 43, 43
+        pos_hint: {"center_x": .175, "center_y": .255}
+    Label:
+        text: "Meu status"
+        size_hint_x: None
+        pos_hint: {"center_x": .485, "center_y": .66}
+        width: 350
+        text_size: self.size
+        font_size: "16sp"
+        font_name: FREE_SANS_BOLD
+        color: WHITE_CHOCOLATE
+        bold: True
+        halign: "left"
+        valign: "middle"
+    BoxLayout:
+        size_hint: .7, .2
+        pos_hint: {"center_x": .59, "center_y": .34}
+        spacing: 10
+        Label:
+            text: "Toque para adicionar seu status"
+            text_size: self.size
+            font_size: "16sp"
+            font_name: FREE_SANS
+            halign: "left"
+            valign: "middle"
+            color: GRAY_CHATEAU
