@@ -53,32 +53,29 @@
         ContactWidget:
 
 <GuideMenu@GuideMenu>:
-    size_hint_y: .18
+    size_hint_y: .185
     GuideButton:
         id: conv_button
         text: "CONVERSAS"
         font_size: "13sp"
         font_name: FREE_SANS_BOLD
-        color: GRAY_CHATEAU
-        group: "guides"
         state: "down"
-        on_release: root.on_guide(self)
+        group: "guides"
+        on_release: root.on_guide("conv_guide")
     GuideButton:
         id: status_button
         text: "STATUS"
         font_size: "13sp"
         font_name: FREE_SANS_BOLD
-        color: GRAY_CHATEAU
         group: "guides"
-        on_release: root.on_guide(self)
+        on_release: root.on_guide("status_guide")
     GuideButton:
         id: calls_button
         text: "CHAMADAS"
         font_size: "13sp"
         font_name: FREE_SANS_BOLD
-        color: GRAY_CHATEAU
         group: "guides"
-        on_release: root.on_guide(self)
+        on_release: root.on_guide("calls_guide")
 
 <ContactWidget@ContactWidget>:
     size_hint_y: None

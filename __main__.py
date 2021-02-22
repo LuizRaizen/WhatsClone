@@ -16,6 +16,7 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.utils import get_color_from_hex as hex_color
 from kivy.utils import platform
+from kivy.clock import Clock
 
 if platform == "win":
     from kivy.config import Config
@@ -98,6 +99,7 @@ class GuideButton(ToggleButtonBehavior, Label):
 
     def __init__(self, **kwargs):
         super(GuideButton, self).__init__(**kwargs)
+        self.bind(size=self.update, pos=self.update)
 
     def on_press(self):
         if not self.state == "down":
@@ -107,7 +109,6 @@ class GuideButton(ToggleButtonBehavior, Label):
         self.canvas.before.clear()
 
     def on_state(self, widget, value):
-        print(widget, value)
         if self.state == "down":
             self.color = TEAL_GREEN
             self.canvas.before.add(Color(1, 1, 1, .08))
@@ -123,14 +124,25 @@ class GuideButton(ToggleButtonBehavior, Label):
             self.canvas.after.clear()
 
     def update(self, widget, value):
-        self.canvas.after.clear()
         self.canvas.before.clear()
-        with self.canvas.after:
-            self.flag.size = self.width, 5
-            self.flag.pos = self.pos
-        with self.canvas.before:
-            self.bg.size = self.size
-            self.bg.pos = self.pos
+        if self.state == "down":
+            with self.canvas.after:
+                self.flag.size = self.width, 5
+                self.flag.pos = self.pos
+            with self.canvas.before:
+                self.bg.size = self.size
+                self.bg.pos = self.pos
+        else:
+            self.color = GRAY_CHATEAU
+
+
+class GuideMenu(BoxLayout):
+
+    def __init__(self, **kwargs):
+        super(GuideMenu, self).__init__(**kwargs)
+
+    def on_guide(self, guide):
+        self.parent.guide_active(guide)
 
 
 class CircularButton(ButtonBehavior, Image):
@@ -150,15 +162,6 @@ class CircularButton(ButtonBehavior, Image):
         self.canvas.after.clear()
 
 
-class GuideMenu(BoxLayout):
-
-    def __init__(self, **kwargs):
-        super(GuideMenu, self).__init__(**kwargs)
-
-    def on_guide(self, guide):
-        self.parent.guide_active(guide)
-
-
 class CallsGuide(ScrollView):
     pass
 
@@ -176,6 +179,7 @@ class RootWidget(FloatLayout):
     def __init__(self, **kwargs):
         super(RootWidget, self).__init__(**kwargs)
         self.orientation = "vertical"
+        self.guide = "conv_guide"
 
     @staticmethod
     def on_button():
@@ -183,13 +187,34 @@ class RootWidget(FloatLayout):
         pop.open()
 
     def guide_active(self, guide):
-        pass
+        self.ids[guide].state = "down"
+        if guide == "conv_guide":
+            self.ids['pages'].load_slide(slide=self.ids['conv_guide'])
+        elif guide == "status_guide":
+            self.ids['pages'].load_slide(slide=self.ids['status_guide'])
+        elif guide == "calls_guide":
+            self.ids['pages'].load_slide(slide=self.ids['calls_guide'])
+        print(guide)
 
 
+class SplashScreen(FloatLayout):
+    
+    def __init__(self, **kwargs):
+        super(SplashScreen, self).__init__(**kwargs)
+        self.on_start()
+    
+    def on_start(self):
+        Clock.schedule_once(self.next, 2)
+        
+    def next(self, td):
+        app.root_window.remove_widget(app.root)
+        app.root_window.add_widget(Builder.load_string(code))
+        
+        
 class Main(App):
 
     def build(self):
-        return Builder.load_string(code)
+        return Builder.load_string(splash)
 
 
 conv_guide = """     
@@ -212,7 +237,7 @@ Popup:
     title_size: "16sp"
     auto_dismiss: False
     size_hint: None, None
-    size: 450, 400
+    size: 500, 400
     BoxLayout:
         orientation: "vertical"
         padding: 10, 20
@@ -220,11 +245,14 @@ Popup:
         Image:
             source: "images/alert_popup.png"
             size: 200, 200
-        Button:
-            text: "Ok"
-            size_hint: .8, .6
-            pos_hint: {"center_x": .5, "center_y": .5}
-            on_release: root.dismiss()
+        FloatLayout:
+            size_hint_y: .7
+            Button:
+                text: "Ok"
+                size_hint: None, None
+                size: 350, 80
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_release: root.dismiss()
 
 """
 
@@ -279,11 +307,35 @@ ModalView:
 
 """
 
+splash = """
+
+#:include kv/colors.kv
+#:include kv/fonts.kv
+
+SplashScreen:
+    canvas.before:
+        Color:
+            rgba: EBONY_CLAY
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    Label:
+        text: "from"
+        font_size: "16sp"
+        font_name: FREE_SANS
+        pos_hint: {"center_x": .5, "center_y": .15}
+    Label:
+        text: "Luiz R. Dererita"
+        font_size: "20sp"
+        font_name: FREE_SANS_BOLD
+        pos_hint: {"center_x": .5, "center_y": .1}
+
+"""
 code = """
 
-#:include .kv/fonts.kv
-#:include .kv/colors.kv
-#:include .kv/widgets.kv
+#:include kv/fonts.kv
+#:include kv/colors.kv
+#:include kv/widgets.kv
 
 #:import ScrollEffect kivy.effects.scroll.ScrollEffect
 
@@ -308,6 +360,7 @@ RootWidget:
                     size: self.size
                     pos: self.pos
         Carousel:
+            id: pages
             direction: "right"
             min_move: .1
             anim_move_duration: .2
@@ -316,11 +369,22 @@ RootWidget:
             ignore_perpendicular_swipes: True
             ConversationsGuide:
                 id: conv_guide
+                index: 0
                 anim_cancel_duration: .1
                 ignore_perpendicular_swipes: True
                 effect_cls: ScrollEffect
             StatusGuide:
+                id: status_guide
+                index: 1
+                anim_cancel_duration: .1
+                ignore_perpendicular_swipes: True
+                effect_cls: ScrollEffect
             CallsGuide:
+                id: calls_guide
+                index: 2
+                anim_cancel_duration: .1
+                ignore_perpendicular_swipes: True
+                effect_cls: ScrollEffect
     
     Label:
         text: "WhatsClone"
@@ -333,7 +397,7 @@ RootWidget:
         bold: True
         pos_hint: {"center_x": .2, "center_y": .96}
     GuideMenu:
-        size_hint: .86, .08
+        size_hint: .86, .085
         pos_hint: {"center_x": .56, "center_y": .88}
     CustomButton:
         source: "images/lupe.png"
